@@ -11,8 +11,6 @@ class ProvisionRequest(BaseModel):
     protocol: Protocol
     device_name: str
     tariff_code: str
-    simultaneous_use: int = 0
-    traffic_usage_gb: float = 0.0
 
 
 class ProvisionResponse(BaseModel):

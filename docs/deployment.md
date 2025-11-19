@@ -16,14 +16,13 @@
 docker compose pull
 docker compose up -d --build
 ```
-- Сервисы и порты:
-  - Billing: `http://localhost:8000/health`
-  - Provisioner: `http://localhost:8001/health`
-  - AmneziaWG/Cloak контейнер: `${AMNEZIA_PUBLIC_PORT}` TCP/UDP (проксируйте 443/udp наружу)
-  - Dashboard: `http://localhost:8002`
-  - Bot Webhook/health (polling внутри): `:8081`
-  - Postgres: `localhost:5432`
-  - MinIO: `http://localhost:9000` (консоль `:9001`)
+Сервисы и порты:
+- Billing: `http://localhost:8000/health`
+- Provisioner: `http://localhost:8001/health`
+- Dashboard: `http://localhost:8002`
+- Bot Webhook/health (polling внутри): `:8081`
+- Postgres: `localhost:5432`
+- MinIO: `http://localhost:9000` (консоль `:9001`)
 
 ## 3. Настройка внешних зависимостей
 - **PostgreSQL**: для прод замените `POSTGRES_HOST/PORT` на данные Neon/Yandex Managed. Запустите миграции Alembic после появления схемы (плейсхолдер под будущие миграции в `scripts`).
@@ -36,7 +35,7 @@ docker compose up -d --build
 2. Получить список тарифов: `curl http://localhost:8000/tariffs`.
 3. Старт платежа: `curl -X POST http://localhost:8000/payments/start -H 'Content-Type: application/json' -d '{"user_id":1,"tariff_code":"light"}'`.
 4. Подтвердить платеж: `curl -X POST http://localhost:8000/payments/<invoice_id>/confirm` и убедиться, что даты и grace-period возвращаются.
-5. Провижн конфигурации: `curl -X POST http://localhost:8001/provision -H 'Content-Type: application/json' -d '{"user_id":1,"protocol":"amneziawg","device_name":"macbook","tariff_code":"light","simultaneous_use":1,"traffic_usage_gb":120}'` (при превышении лимитов вернётся 4xx).
+5. Провижн конфигурации: `curl -X POST http://localhost:8001/provision -H 'Content-Type: application/json' -d '{"user_id":1,"protocol":"wireguard","device_name":"macbook","tariff_code":"light"}'`.
 6. Зайти в `http://localhost:8002` и убедиться, что тарифа и статусы отображаются.
 
 ## 5. Прод-профиль
@@ -49,7 +48,7 @@ docker compose up -d --build
 ## 6. Масштабирование
 - Горизонтальное масштабирование Provisioner/Billing через replicas + общий Postgres/Redis.
 - Выделенные провижен-узлы для Amnezia/WireGuard/OpenVPN с Ansible-ролями.
-- Квоты и QoS: ограничения устройств/скорости реализованы в Provisioner (поля `simultaneous_use`/`traffic_usage_gb`), а равномерный шейпинг 1 Gbps включайте на каждом узле через `scripts/cake-autorate.sh` (systemd timer или cron).
+- Квоты: ограничение устройств и скорости (tc/cake-autorate) подключается через Provisioner API.
 
 ## 7. Дальшие шаги разработки
 - Реализовать платежи Stars (invoices и webhooks) и крипто-эквайринг.

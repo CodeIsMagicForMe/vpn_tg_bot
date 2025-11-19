@@ -11,9 +11,6 @@ class Settings(BaseSettings):
     minio_root_user: str = "admin"
     minio_root_password: str = "changeme123"
     minio_bucket: str = "configs"
-    amnezia_api_url: str = "http://amneziawg:5000"
-    amnezia_public_host: str = "vpn.example.com"
-    amnezia_public_port: int = 443
 
     class Config:
         env_file = ".env"
@@ -29,9 +26,6 @@ class Settings(BaseSettings):
             "minio_root_user": {"env": "MINIO_ROOT_USER"},
             "minio_root_password": {"env": "MINIO_ROOT_PASSWORD"},
             "minio_bucket": {"env": "MINIO_BUCKET"},
-            "amnezia_api_url": {"env": "AMNEZIA_API_URL"},
-            "amnezia_public_host": {"env": "AMNEZIA_PUBLIC_HOST"},
-            "amnezia_public_port": {"env": "AMNEZIA_PUBLIC_PORT"},
         }
 
 

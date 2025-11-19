@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>VPN Control Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background: #0f172a; color: #e2e8f0; }
+        .card { background: #1e293b; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1rem; }
+        h1 { color: #38bdf8; }
+        .tariff { display: flex; justify-content: space-between; border-bottom: 1px solid #334155; padding: 0.5rem 0; }
+        .tariff:last-child { border-bottom: none; }
+        small { color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <h1>VPN Control Panel</h1>
+    <div class="card">
+        <h2>Provisioner</h2>
+        <p>Status: {{ provisioner.status }} | Bucket: {{ provisioner.bucket }}</p>
+    </div>
+    <div class="card">
+        <h2>Tariffs</h2>
+        {% for tariff in tariffs %}
+        <div class="tariff">
+            <div>
+                <strong>{{ tariff.name }}</strong>
+                <div><small>{{ tariff.devices }} устройств • {{ tariff.nodes }} узла • SmartDNS: {{ 'да' if tariff.smartdns else 'нет' }}</small></div>
+            </div>
+            <div>{{ tariff.price_stars }} ⭐ / {{ tariff.duration_days }} дней</div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

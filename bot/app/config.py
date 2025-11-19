@@ -1,4 +1,5 @@
-from pydantic import BaseSettings, AnyHttpUrl
+from pydantic_settings import BaseSettings
+from pydantic import AnyHttpUrl   # эта строчка отдельно
 from typing import List
 
 

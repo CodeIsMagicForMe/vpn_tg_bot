@@ -3,8 +3,9 @@ uvicorn==0.29.0
 sqlalchemy==2.0.29
 alembic==1.13.1
 psycopg2-binary==2.9.9
-pydantic==2.7.0
+pydantic==2.8.2
 redis==5.0.4
 python-dotenv==1.0.1
 minio==7.2.5
 passlib[bcrypt]==1.7.4
+pydantic-settings

@@ -65,6 +65,49 @@ def _create_subscription(user_id: int, tariff_code: str) -> Subscription:
     return sub
 
 
+@dataclass
+class Subscription:
+    user_id: int
+    tariff_code: str
+    active_until: datetime
+    proto: str = "amneziawg"
+    node_id: str = "default_nl"
+
+    @property
+    def is_active(self) -> bool:
+        return self.active_until > datetime.utcnow()
+
+
+TARIFFS: Dict[str, Dict[str, str | int]] = {
+    "trial": {"name": "Trial", "duration": 3, "price": 0},
+    "light": {"name": "Light", "duration": 30, "price": 110},
+    "family": {"name": "Family", "duration": 30, "price": 200},
+    "unlimited": {"name": "Unlimited", "duration": 30, "price": 290},
+    "year": {"name": "Годовая", "duration": 365, "price": 290 * 12 * 0.65},
+}
+
+SUBSCRIPTIONS: Dict[int, Subscription] = {}
+
+
+def _get_active_subscription(user_id: int) -> Optional[Subscription]:
+    sub = SUBSCRIPTIONS.get(user_id)
+    if sub and sub.is_active:
+        return sub
+    return None
+
+
+def _create_subscription(user_id: int, tariff_code: str) -> Subscription:
+    tariff = TARIFFS.get(tariff_code, TARIFFS["trial"])
+    duration_days = int(tariff.get("duration", 3))
+    sub = Subscription(
+        user_id=user_id,
+        tariff_code=tariff_code,
+        active_until=datetime.utcnow() + timedelta(days=duration_days),
+    )
+    SUBSCRIPTIONS[user_id] = sub
+    return sub
+
+
 @router.message(CommandStart())
 async def cmd_start(message: Message):
     await message.answer(
